@@ -1,53 +1,91 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import MenuIcon from '@material-ui/icons/Menu';
+import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
-const useStyles = makeStyles({
-  root: {
-      display: 'inline-block',
-    minWidth: 345,
-    marginTop: 50,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 30,
-  },
-  pos: {
-    marginBottom: 12,
-  },
- 
-});
+const useStyles = makeStyles((theme) => ({
+	root: {
+		flexGrow: 1,
+		marginTop: 10,
+		marginBottom: 30,
+	},
+	menuButton: {
+		marginRight: theme.spacing(2),
+	},
+	title: {
+		flexGrow: 1,
+	},
+}));
 
-export default function SimpleCard() {
-  const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+export default function MenuAppBar() {
+	const classes = useStyles();
+	const [auth, setAuth] = React.useState(true);
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const open = Boolean(anchorEl);
 
-  return ( 
-  <div>
+	const handleChange = (event) => {
+		setAuth(event.target.checked);
+	};
 
-        <AppBar position="static">
-  <Toolbar>
-    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-      <MenuIcon />
-    </IconButton>
-    <Typography variant="h6" className={classes.title}>
-     DevRes
-    </Typography>
-    <Button id='login' color="inherit">Login</Button>
-  </Toolbar>
-</AppBar>
+	const handleMenu = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
 
-  
-   
-    </div>
-  );
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
+	return (
+		<div className={classes.root}>
+			<AppBar position='static'>
+				<Toolbar>
+					<IconButton
+						edge='start'
+						className={classes.menuButton}
+						color='secondary'
+						aria-label='menu'>
+						<MenuIcon />
+					</IconButton>
+					<Typography color='secondary' variant='h6' className={classes.title}>
+						ResDev
+					</Typography>
+					{auth && (
+						<div>
+							<IconButton
+								aria-label='account of current user'
+								aria-controls='menu-appbar'
+								aria-haspopup='true'
+								onClick={handleMenu}
+								color='secondary'>
+								<AccountCircle />
+							</IconButton>
+							<Menu
+								id='menu-appbar'
+								anchorEl={anchorEl}
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'right',
+								}}
+								keepMounted
+								transformOrigin={{
+									vertical: 'top',
+									horizontal: 'right',
+								}}
+								open={open}
+								onClose={handleClose}>
+								<MenuItem onClick={handleClose}>Profile</MenuItem>
+								<MenuItem onClick={handleClose}>My account</MenuItem>
+							</Menu>
+						</div>
+					)}
+				</Toolbar>
+			</AppBar>
+		</div>
+	);
 }
